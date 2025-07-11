@@ -1,0 +1,1 @@
+{"scan_id":"933dc28a-9076-4d87-8882-11fb61a5a3e1","status":"pending","message":"Pemindaian dimulai","target":"http://localhost/dvwa/vulnerabilities/sqli/?id=1&Submit=Submit","scan_types":["SQLInjectionScanner"]}

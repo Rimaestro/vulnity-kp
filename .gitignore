@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+*.log
+
+# Virtual environment
+venv/
+ENV/
+.env
+.venv
+
+# Editor/OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Test/coverage
+.coverage
+.pytest_cache/
+htmlcov/
+
+# Mac/Linux/Windows trash
+*.Trash-*/
+*.~
+Thumbs.db 

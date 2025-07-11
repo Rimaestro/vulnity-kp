@@ -1,0 +1,10 @@
+{
+  "url": "http://localhost/dvwa/vulnerabilities/sqli/?id=1&Submit=Submit",
+  "scan_types": ["SQLInjectionScanner"],
+  "options": {
+    "max_depth": 2,
+    "threads": 1,
+    "timeout": 10,
+    "follow_redirects": true
+  }
+} 
