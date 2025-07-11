@@ -1,0 +1,62 @@
+# Vulnity Web Vulnerability Scanner Dependencies
+
+# Core Web Framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+
+# HTTP Client for Scanner
+requests==2.31.0
+httpx==0.25.2
+
+# HTML Parsing
+beautifulsoup4==4.12.2
+lxml==4.9.3
+
+# Database
+sqlalchemy==2.0.23
+alembic==1.12.1
+
+# Authentication & Security
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-multipart==0.0.6
+
+# Configuration Management
+pydantic==2.5.0
+pydantic-settings==2.1.0
+
+# Testing
+pytest==7.4.3
+pytest-asyncio==0.21.1
+pytest-cov==4.1.0
+httpx==0.25.2
+
+# Development Tools
+black==23.11.0
+flake8==6.1.0
+mypy==1.7.1
+
+# Logging & Monitoring
+structlog==23.2.0
+
+# Time & Date Handling
+python-dateutil==2.8.2
+
+# Environment Variables
+python-dotenv==1.0.0
+
+# Async Support
+aiofiles==23.2.1
+
+# Scanner Specific
+urllib3==2.1.0
+chardet==5.2.0
+certifi==2023.11.17
+
+# Report Generation
+jinja2==3.1.2
+weasyprint==60.2
+
+# Data Analysis
+pandas==2.1.4
+numpy==1.25.2

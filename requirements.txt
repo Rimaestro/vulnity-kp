@@ -1,0 +1,43 @@
+# Vulnity Web Vulnerability Scanner Dependencies
+
+# Core HTTP and Web
+requests>=2.31.0
+httpx>=0.25.0
+urllib3>=2.1.0
+
+# HTML Parsing
+beautifulsoup4>=4.12.0
+lxml>=4.9.0
+
+# Configuration and Settings
+pyyaml>=6.0.0
+python-dotenv>=1.0.0
+
+# Logging and Monitoring
+structlog>=23.2.0
+
+# Time and Date
+python-dateutil>=2.8.0
+
+# Data Analysis (for reporting)
+pandas>=2.1.0
+numpy>=1.25.0
+
+# Template Engine (for reports)
+jinja2>=3.1.0
+
+# Testing Dependencies
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+pytest-cov>=4.1.0
+
+# Development Tools
+black>=23.11.0
+flake8>=6.1.0
+mypy>=1.7.0
+
+# Optional: Report Generation
+# weasyprint>=60.0  # Uncomment for PDF reports
+
+# Optional: Async Support
+# aiofiles>=23.2.0  # Uncomment for async operations
