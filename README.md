@@ -175,35 +175,6 @@ class MyNewScanner(BaseScanner):
 3. Update routing di `frontend/src/App.tsx`
 4. Tambahkan API endpoint di backend jika diperlukan
 
-## Lisensi
-
-MIT
-
-## Kontribusi
-
-Kontribusi sangat diterima! Silakan kirim pull request atau buka issue untuk diskusi.
-
-## Credits
-
-Proyek ini terinspirasi oleh [w3af](https://github.com/andresriancho/w3af). 
-
-# Vulnity-KP
-
-Proyek Vulnity-KP adalah platform keamanan web yang dirancang untuk mendeteksi dan menganalisis kerentanan pada aplikasi web.
-
-## Fitur Utama
-
-- Pemindaian kerentanan web otomatis
-- Deteksi SQL Injection, XSS, dan kerentanan lainnya
-- Analisis hasil dan rekomendasi perbaikan
-- Dashboard untuk manajemen hasil pemindaian
-
-## Komponen
-
-- **Backend**: API dan engine pemindaian kerentanan
-- **Frontend**: Antarmuka pengguna untuk manajemen pemindaian
-- **Reference**: Kode referensi dan contoh untuk pengembangan
-
 ## Penyesuaian Modul SQL Injection Scanner
 
 Modul SQL Injection Scanner telah ditingkatkan dengan beberapa penyesuaian untuk meningkatkan akurasi dan kinerja:
@@ -261,3 +232,14 @@ python test_sqli_functions.py
 ## Lisensi
 
 Proyek ini dilisensikan di bawah MIT License. 
+
+## Kontribusi
+
+Kontribusi sangat diterima! Silakan kirim pull request atau buka issue untuk diskusi.
+
+## Credits
+
+Proyek ini terinspirasi oleh [w3af](https://github.com/andresriancho/w3af).
+
+# vulnity-kp
+Vulnity-KP: Platform keamanan web untuk mendeteksi dan menganalisis kerentanan pada aplikasi web. Fitur: pemindaian otomatis, deteksi SQLi/XSS, dashboard, plugin-based, React+FastAPI.
