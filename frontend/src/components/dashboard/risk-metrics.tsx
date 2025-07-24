@@ -76,6 +76,13 @@ function RiskMetrics({ className, compact = false }: RiskMetricsProps) {
     if (score >= 4) return "outline"
     return "default"
   }
+  
+  const getRiskScoreBadgeClass = (score: number) => {
+    if (score >= 8) return "bg-red-600 hover:bg-red-700 text-white"
+    if (score >= 6) return "bg-orange-600 hover:bg-orange-700 text-white"
+    if (score >= 4) return "border-yellow-500 text-yellow-600"
+    return "text-blue-600"
+  }
 
   const getSlaColor = (compliance: number) => {
     if (compliance >= 95) return "text-green-600 dark:text-green-400"
@@ -291,7 +298,7 @@ function RiskMetrics({ className, compact = false }: RiskMetricsProps) {
           </div>
           <Badge 
             variant={riskMetrics.trendDirection === "up" ? "destructive" : "default"}
-            className="text-xs"
+            className={`text-xs ${riskMetrics.trendDirection === "up" ? getRiskScoreBadgeClass(8) : ""}`}
           >
             {riskMetrics.trendDirection === "up" ? "Action Needed" : "Improving"}
           </Badge>

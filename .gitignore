@@ -95,3 +95,7 @@ coverage.xml
 # Temporary files
 *.tmp
 *.temp
+
+# Development tools configuration
+.mcp.json
+forge.yaml

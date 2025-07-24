@@ -1,11 +1,12 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/contexts/auth-context'
 import { DashboardLayout, DashboardHeader, DashboardContent } from '@/components/dashboard/dashboard-layout'
-import { DashboardStats, VulnerabilityBreakdown } from '@/components/dashboard/dashboard-stats'
+import { DashboardStats } from '@/components/dashboard/dashboard-stats'
 import { RecentScansTable } from '@/components/dashboard/recent-scans-table'
 import { RecentActivity } from '@/components/dashboard/recent-activity'
 import { VulnerabilityChart } from '@/components/dashboard'
+import { AnalyticsDashboard } from '@/components/dashboard/analytics-dashboard'
 import { useDashboardData, useScanOperations } from '@/hooks/use-dashboard-data'
 import { useWebSocketDashboard } from '@/hooks/use-websocket'
 import { SmartRefreshButton, useSmartRefresh } from '@/components/dashboard/smart-refresh-button'
@@ -13,18 +14,17 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { AnimatedButton } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { AlertCircle, Plus, Download, Calendar, RefreshCw } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { AlertCircle, Plus, Download } from 'lucide-react'
+import { motion } from 'framer-motion'
 
 export function DashboardPage() {
   const { user } = useAuth()
   const navigate = useNavigate()
-  const [refreshKey, setRefreshKey] = useState(0)
+  // ...existing code...
 
   const {
     stats,
     recentScans,
-    vulnerabilityBreakdown,
     isLoading,
     error,
     refresh
@@ -36,7 +36,6 @@ export function DashboardPage() {
   // Smart refresh integration
   const { isRefreshing, lastRefresh, handleRefresh } = useSmartRefresh(
     async () => {
-      setRefreshKey(prev => prev + 1)
       await refresh()
     },
     websocket.connectionStatus
@@ -62,8 +61,7 @@ export function DashboardPage() {
     downloadReport,
     deleteScan,
     pauseScan,
-    resumeScan,
-    isLoading: isOperationLoading
+    resumeScan
   } = useScanOperations()
 
   // WebSocket event subscriptions (throttled to prevent excessive refreshing)
@@ -115,19 +113,8 @@ export function DashboardPage() {
     navigate('/dashboard/scans')
   }
 
-  const handleViewScans = () => {
-    navigate('/dashboard/scans')
-  }
 
-  const handleViewReports = () => {
-    console.log('Viewing reports...')
-    // TODO: Navigate to reports page when implemented
-  }
 
-  const handleSettings = () => {
-    console.log('Opening settings...')
-    // TODO: Navigate to settings page when implemented
-  }
 
   return (
     <DashboardLayout>
@@ -149,10 +136,6 @@ export function DashboardPage() {
             <AnimatedButton variant="outline" hoverScale={1.02}>
               <Download className="mr-2 h-4 w-4" />
               Export Report
-            </AnimatedButton>
-            <AnimatedButton variant="outline" hoverScale={1.02}>
-              <Calendar className="mr-2 h-4 w-4" />
-              Date Range
             </AnimatedButton>
             <AnimatedButton onClick={handleNewScan} hoverScale={1.05}>
               <Plus className="mr-2 h-4 w-4" />
@@ -256,14 +239,7 @@ export function DashboardPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <Card className="hover-lift">
-                <CardHeader>
-                  <CardTitle>Analytics Dashboard</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p>Analytics content will be implemented here.</p>
-                </CardContent>
-              </Card>
+              <AnalyticsDashboard />
             </motion.div>
           </TabsContent>
 

@@ -27,7 +27,9 @@ from app.config.logging import setup_logging, get_logger
 from app.api.v1.auth import router as auth_router
 from app.api.v1.scan import router as scan_router
 from app.api.v1.vulnerability import router as vulnerability_router
+
 from app.api.v1.websocket import router as websocket_router
+from app.api.v1.analytics_trend_draft import router as analytics_trend_router
 
 # Try to import uvloop for better performance (Linux/Mac only)
 try:
@@ -215,9 +217,11 @@ async def root():
 
 
 # Include routers
+
 app.include_router(auth_router, prefix="/api/v1")
 app.include_router(scan_router, prefix="/api/v1")
 app.include_router(vulnerability_router, prefix="/api/v1")
+app.include_router(analytics_trend_router, prefix="/api/v1")
 app.include_router(websocket_router)  # WebSocket routes don't need prefix
 
 

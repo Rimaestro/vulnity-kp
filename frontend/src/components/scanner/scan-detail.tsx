@@ -19,8 +19,10 @@ import { Progress } from '@/components/ui/progress'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { VulnerabilityDetail } from '@/components/vulnerabilities/vulnerability-detail'
 import type { Vulnerability } from '@/types/api'
 import type { ScanWithDetails, VulnerabilitySummary } from '@/types/scanner'
+import type { VulnerabilityItem } from '@/hooks/use-vulnerability-data'
 
 interface ScanDetailProps {
   scan: ScanWithDetails
@@ -30,6 +32,62 @@ interface ScanDetailProps {
 
 export function ScanDetail({ scan, vulnerabilities = [], onClose }: ScanDetailProps) {
   const [activeTab, setActiveTab] = useState('overview')
+  const [selectedVulnerability, setSelectedVulnerability] = useState<VulnerabilityItem | null>(null)
+
+  // Convert Vulnerability to VulnerabilityItem format for the detail modal
+  const convertToVulnerabilityItem = (vuln: Vulnerability): VulnerabilityItem => {
+    // Map vulnerability type to allowed types
+    const mapVulnType = (type: string): VulnerabilityItem['type'] => {
+      const typeMap: Record<string, VulnerabilityItem['type']> = {
+        'sql_injection': 'sql-injection',
+        'cross_site_scripting': 'xss',
+        'cross_site_request_forgery': 'csrf',
+        'file_upload': 'file-upload',
+        'authentication_bypass': 'auth-bypass',
+        'information_disclosure': 'info-disclosure',
+        'denial_of_service': 'dos',
+        'remote_code_execution': 'rce'
+      }
+      return typeMap[type] || 'info-disclosure'
+    }
+
+    // Map severity (exclude 'info' as it's not in VulnerabilityItem)
+    const mapSeverity = (risk: string): VulnerabilityItem['severity'] => {
+      if (risk === 'info') return 'low'
+      return risk as VulnerabilityItem['severity']
+    }
+
+    return {
+      id: vuln.id.toString(),
+      title: vuln.title,
+      description: vuln.description || '',
+      severity: mapSeverity(vuln.risk),
+      type: mapVulnType(vuln.vulnerability_type),
+      status: vuln.status === 'confirmed' ? 'open' : 
+              vuln.status === 'false_positive' ? 'dismissed' : 
+              vuln.status as VulnerabilityItem['status'],
+      target: vuln.endpoint || '',
+      discoveredAt: new Date(vuln.created_at || Date.now()),
+      lastUpdated: new Date(vuln.created_at || Date.now()),
+      impact: mapSeverity(vuln.risk) as 'high' | 'medium' | 'low',
+      exploitability: mapSeverity(vuln.risk) as 'high' | 'medium' | 'low',
+      fixComplexity: 'medium' as 'low' | 'medium' | 'high',
+      cve: vuln.cwe_id || undefined,
+      tags: [],
+      assignedTo: undefined,
+      cvssScore: vuln.cvss_score || undefined,
+      estimatedFixTime: 4 // Default 4 hours
+    }
+  }
+
+  const handleVulnerabilityClick = (vulnerability: Vulnerability) => {
+    const vulnerabilityItem = convertToVulnerabilityItem(vulnerability)
+    setSelectedVulnerability(vulnerabilityItem)
+  }
+
+  const handleCloseVulnerabilityDetail = () => {
+    setSelectedVulnerability(null)
+  }
 
   // Calculate vulnerability summary
   const vulnerabilitySummary: VulnerabilitySummary = {
@@ -108,6 +166,21 @@ export function ScanDetail({ scan, vulnerabilities = [], onClose }: ScanDetailPr
         return 'secondary'
       default:
         return 'outline'
+    }
+  }
+  
+  const getRiskBadgeClass = (risk: string): string => {
+    switch (risk) {
+      case 'critical':
+        return 'bg-red-600 hover:bg-red-700 text-white'
+      case 'high':
+        return 'bg-orange-600 hover:bg-orange-700 text-white'
+      case 'medium':
+        return 'border-yellow-500 text-yellow-600'
+      case 'low':
+        return 'text-blue-600'
+      default:
+        return ''
     }
   }
 
@@ -295,7 +368,7 @@ export function ScanDetail({ scan, vulnerabilities = [], onClose }: ScanDetailPr
                         <TableCell>
                           <div className="flex items-center space-x-2">
                             {getRiskIcon(vulnerability.risk)}
-                            <Badge variant={getRiskColor(vulnerability.risk)}>
+                            <Badge variant={getRiskColor(vulnerability.risk)} className={getRiskBadgeClass(vulnerability.risk)}>
                               {vulnerability.risk.toUpperCase()}
                             </Badge>
                           </div>
@@ -321,7 +394,11 @@ export function ScanDetail({ scan, vulnerabilities = [], onClose }: ScanDetailPr
                           </Badge>
                         </TableCell>
                         <TableCell>
-                          <Button variant="outline" size="sm">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => handleVulnerabilityClick(vulnerability)}
+                          >
                             <Eye className="h-4 w-4 mr-2" />
                             View Details
                           </Button>
@@ -366,6 +443,13 @@ export function ScanDetail({ scan, vulnerabilities = [], onClose }: ScanDetailPr
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Vulnerability Detail Modal */}
+      <VulnerabilityDetail
+        vulnerability={selectedVulnerability}
+        open={!!selectedVulnerability}
+        onClose={handleCloseVulnerabilityDetail}
+      />
     </div>
   )
 }

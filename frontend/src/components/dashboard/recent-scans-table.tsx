@@ -1,6 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { format } from 'date-fns'
-import { motion } from 'framer-motion'
 import {
   MoreHorizontal,
   Eye,
@@ -92,26 +91,51 @@ function getStatusBadge(status: Scan['status']) {
 function getRiskBadge(count: number, type: 'critical' | 'high' | 'medium' | 'low') {
   if (count === 0) return null
 
-  const variants = {
-    critical: 'destructive' as const,
-    high: 'destructive' as const,
-    medium: 'outline' as const,
-    low: 'secondary' as const,
+  // Konfigurasi badge berdasarkan tipe risiko
+  const badgeConfig = {
+    critical: {
+      variant: 'destructive' as const,
+      className: 'bg-red-600 hover:bg-red-700 text-white'
+    },
+    high: {
+      variant: 'destructive' as const,
+      className: 'bg-orange-600 hover:bg-orange-700 text-white'
+    },
+    medium: {
+      variant: 'outline' as const,
+      className: 'border-yellow-500 text-yellow-600'
+    },
+    low: {
+      variant: 'secondary' as const,
+      className: 'text-blue-600'
+    },
   }
 
-  const colors = {
-    critical: 'text-red-600',
-    high: 'text-orange-600',
-    medium: 'text-yellow-600',
-    low: 'text-blue-600',
-  }
+  const config = badgeConfig[type]
 
   return (
-    <Badge variant={variants[type]} className={colors[type]}>
+    <Badge 
+      variant={config.variant} 
+      className={config.className}
+    >
       {count}
     </Badge>
   )
 }
+
+// Define keyframe animation for table rows
+const fadeInAnimation = `
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+`;
 
 export function RecentScansTable({
   scans = [],
@@ -122,6 +146,24 @@ export function RecentScansTable({
   onPauseScan,
   onResumeScan
 }: RecentScansTableProps) {
+  // Add style tag for animations
+  useEffect(() => {
+    // Add the animation styles to the document if they don't exist
+    if (!document.getElementById('scan-table-animations')) {
+      const styleEl = document.createElement('style');
+      styleEl.id = 'scan-table-animations';
+      styleEl.textContent = fadeInAnimation;
+      document.head.appendChild(styleEl);
+    }
+    
+    // Cleanup on unmount
+    return () => {
+      const styleEl = document.getElementById('scan-table-animations');
+      if (styleEl) {
+        document.head.removeChild(styleEl);
+      }
+    };
+  }, []);
   if (isLoading) {
     return (
       <Card>
@@ -209,14 +251,15 @@ export function RecentScansTable({
           </TableHeader>
           <TableBody>
             {scans.map((scan, index) => (
-              <motion.div
-                key={scan.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1, duration: 0.3 }}
-                style={{ display: 'contents' }}
-              >
-                <TableRow className="hover:bg-muted/50 transition-colors hover-lift">
+                <TableRow 
+                  key={scan.id}
+                  className="hover:bg-muted/50 transition-colors hover-lift"
+                  style={{
+                    opacity: 0,
+                    animation: `fadeIn 0.3s ${index * 0.1}s forwards`,
+                    transform: 'translateY(20px)',
+                  }}
+                >
                 <TableCell>
                   <div>
                     <div className="font-medium">
@@ -301,7 +344,6 @@ export function RecentScansTable({
                   </DropdownMenu>
                 </TableCell>
                 </TableRow>
-              </motion.div>
             ))}
           </TableBody>
         </Table>
